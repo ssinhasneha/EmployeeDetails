@@ -4,6 +4,7 @@
  */
 package com.exavalu.models;
 
+import com.exavalu.models.Country;
 import com.exavalu.services.EmployeeService;
 import com.exavalu.services.LoginService;
 import com.exavalu.services.UserService;
@@ -33,6 +34,10 @@ public class User extends ActionSupport implements ApplicationAware, SessionAwar
     private String password;
     private String firstName;
     private String lastName;
+    private String phone;
+    private String countryCode;
+    private String stateCode;
+    private String districtCode;
 
     private SessionMap<String, Object> sessionMap = (SessionMap) ActionContext.getContext().getSession();
 
@@ -40,14 +45,14 @@ public class User extends ActionSupport implements ApplicationAware, SessionAwar
 
     @Override
     public void setApplication(Map<String, Object> application) {
-        map = (ApplicationMap) application;
+        setMap((ApplicationMap) application);
     }
 
     @Override
     public void setSession(Map<String, Object> session) {
-        sessionMap = (SessionMap) session;
+        setSessionMap((SessionMap<String, Object>) (SessionMap) session);
     }
-    
+
     public String doLogin() throws Exception {
         String result = "FAILURE";
 
@@ -55,10 +60,8 @@ public class User extends ActionSupport implements ApplicationAware, SessionAwar
 
         if (success) {
             System.out.println("returning Success from doLogin method");
-            sessionMap.put("Loggedin",this);
-            ArrayList empList = EmployeeService.getInstance().getAllEmployees();
-
-           sessionMap.put("EmpList", empList);
+            getSessionMap().put("Loggedin", this);
+           
             result = "SUCCESS";
         } else {
             System.out.println("returning Failure from doLogin method");
@@ -66,35 +69,63 @@ public class User extends ActionSupport implements ApplicationAware, SessionAwar
 
         return result;
     }
-    
-    
-    public String doRegister() throws Exception {
-        String result = "FAILURE";
 
-        boolean success = UserService.getInstance().doRegister(this);
+    public String doPreSignUp() throws Exception {
+        String result = "SUCCESS";
+        ArrayList countryList = UserService.getInstance().getAllCountries();
+        ArrayList stateList = null;
+        ArrayList districtList = null;
+        sessionMap.put("CountryList", countryList);
+        System.out.println("CountryCode=" + this.countryCode);
+        System.out.println("StateCode=" + this.stateCode);
+        System.out.println("DistrictCode=" + this.districtCode);
+        if (this.countryCode != null) {
+            stateList = UserService.getInstance().getAllstates(this.countryCode);
+            sessionMap.put("StateList", stateList);
+            sessionMap.put("User", this);
+            result="STATELIST";
 
-        if (success) {
-            result = "SUCCESS";
-            String successMsg ="congratulations your account has been  created";
-            sessionMap.put("SuccessMsg",successMsg);
-            System.out.println("returning Success from doRegister method");
-            
-        } else {
-            String errorMsg ="Email already  in used";
-            sessionMap.put("ErrorMsg", errorMsg);
-            System.out.println("returning Failure from doRegister method");
+        }
+        
+        if (this.stateCode != null) {
+            districtList = UserService.getInstance().getAllDistricts(this.stateCode);
+            sessionMap.put("DistrictList", districtList);
+            sessionMap.put("User", this);
+            result="DISTRICTLIST";
+
+        }
+//        if (this.countryCode != null && this.stateCode != null) {
+//            districtList = UserService.getInstance().getAllDistricts(this.stateCode);
+//            sessionMap.put("DistrictList", districtList);
+//            sessionMap.put("User", this);
+//
+//        }
+        if (this.countryCode != null && this.stateCode != null && this.districtCode != null && this.countryCode.length() > 0 && this.stateCode.length() > 0 && this.districtCode.length() > 0) {
+            boolean success = UserService.getInstance().doRegister(this);
+            if (success) {
+                result = "DONE";
+                String successMsg = "Account Created,Now Login to your Account";
+
+                sessionMap.put("SignUpSuccessMsg", successMsg);
+
+            } else {
+                result = "EXISTS";
+                String errorMsg = "This Email is already registered..Try with another Email";
+
+                sessionMap.put("SignUpFailureMsg", errorMsg);
+            }
         }
 
         return result;
+
     }
-    
-    public String doLogout()
-    {
-        String result="SUCCESS";
-        sessionMap.clear();
+
+    public String doLogout() {
+        String result = "SUCCESS";
+        getSessionMap().clear();
         return result;
     }
-   
+
     /**
      * @return the emailAddress
      */
@@ -150,6 +181,89 @@ public class User extends ActionSupport implements ApplicationAware, SessionAwar
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
+    /**
+     * @return the phone
+     */
+    public String getPhone() {
+        return phone;
+    }
+
+    /**
+     * @param phone the phone to set
+     */
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    /**
+     * @return the countryCode
+     */
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    /**
+     * @param countryCode the countryCode to set
+     */
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    /**
+     * @return the stateCode
+     */
+    public String getStateCode() {
+        return stateCode;
+    }
+
+    /**
+     * @param stateCode the stateCode to set
+     */
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
+    }
+
+    /**
+     * @return the distCode
+     */
+    public String getDistrictCode() {
+        return districtCode;
+    }
+
+    /**
+     * @param distCode the distCode to set
+     */
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
+    }
+
+    /**
+     * @return the sessionMap
+     */
+    public SessionMap<String, Object> getSessionMap() {
+        return sessionMap;
+    }
+
+    /**
+     * @param sessionMap the sessionMap to set
+     */
+    public void setSessionMap(SessionMap<String, Object> sessionMap) {
+        this.sessionMap = sessionMap;
+    }
+
+    /**
+     * @return the map
+     */
+    public ApplicationMap getMap() {
+        return map;
+    }
+
+    /**
+     * @param map the map to set
+     */
+    public void setMap(ApplicationMap map) {
+        this.map = map;
+    }
 
 }

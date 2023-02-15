@@ -38,7 +38,7 @@
         </style>    
     </head>
     <body>
-        <jsp:include page="menu.jsp"></jsp:include>
+       
           
         <c:set var="msg" value="${SuccessMsg2}"/>
         <c:if test="${msg!=null}">

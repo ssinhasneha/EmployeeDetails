@@ -6,17 +6,20 @@
     <!-- Configuration for the default package. -->
     <package name="default" namespace="/" extends="struts-default">
         <action name="Login" class="com.exavalu.models.User" method="doLogin">
-            <result name="SUCCESS">employeeDetails.jsp</result>
+           
+            <result name="SUCCESS">background.jsp</result>
             <result name="FAILURE">login.jsp</result>
         </action>
+         
+        <action name="ConsumeAPI" class="com.exavalu.models.APIUser" method="getDataFromAPI"> 
+            <result name="SUCCESS">printJsonObject.jsp</result>
+            <result name="FAILURE">login.jsp</result>
+        </action> 
         <action name="Logout" class="com.exavalu.models.User" method="doLogout">
             <result name="SUCCESS">landingPage.jsp</result>
             <result name="FAILURE">employeeDetails.jsp</result>
         </action>
-        <action name="Signup" class="com.exavalu.models.User" method="doRegister">
-            <result name="SUCCESS">login.jsp</result>
-            <result name="FAILURE">signup.jsp</result>
-        </action>
+
         <action name="AddEmployee" class="com.exavalu.models.Employee" method="doAddEmployee">
             <result name="SUCCESS">employeeDetails.jsp</result>
             <result name="FAILURE">addEmployee.jsp</result>
@@ -31,7 +34,16 @@
             <result name="SUCCESS">employeeDetails.jsp</result>
             <result name="FAILURE">editEmployee.jsp</result>
         </action>
-           
-              
+        <action name="PreSignUp" class="com.exavalu.models.User" method="doPreSignUp">
+            <result name="STATELIST">statelist.jsp</result>
+            <result name="DISTRICTLIST">district.jsp</result>
+            <result name="SUCCESS">signup.jsp</result>
+           <result name="DONE">login.jsp</result>
+           <result name="EXISTS">signup.jsp</result>
+        </action>
+          <action name="Show" class="com.exavalu.models.Employee" method="getAllEmployees">
+            <result name="SHOW">employeeDetails.jsp</result>
+           </action>
+        
     </package>
 </struts>

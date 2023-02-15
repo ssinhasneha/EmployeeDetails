@@ -7,14 +7,22 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
         <!-- Custom styles for this template -->
+      
+     
+        <link href="css/menu_css.css" rel="stylesheet">
         <link href="css/signin.css" rel="stylesheet">
-        
     </head>
 <%@taglib prefix="s" uri="/struts-tags"%> 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
     <body class="text-center">
 
 
         <main class="form-signin w-100 m-auto">
+            <c:if test="${SignUpSuccessMsg!=null}">
+                <div class="alert alert-success msg_style" role="alert">
+                    <c:out value="${SignUpSuccessMsg}"/>
+                </div>
+            </c:if>
             <form action="Login" method="post">
                 <img class="mb-4" src="images/flower-logo.jpg" alt="" width="200" height="200">
                 <h1 class="h3 mb-3 fw-normal">Please sign in</h1>

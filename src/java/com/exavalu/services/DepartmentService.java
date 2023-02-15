@@ -17,19 +17,19 @@ import java.util.ArrayList;
  * @author sinha
  */
 public class DepartmentService {
-    public static DepartmentService departmentService = null;
-    
-    public static DepartmentService getInstance()
-    {
-        if(departmentService==null)
-        {
-            return new DepartmentService();
-        }
-        else
-        {
-            return departmentService;
-        }
-    }
+//    public static DepartmentService departmentService = null;
+//    
+//    public static DepartmentService getInstance()
+//    {
+//        if(departmentService==null)
+//        {
+//            return new DepartmentService();
+//        }
+//        else
+//        {
+//            return departmentService;
+//        }
+//    }
     
     public static ArrayList getAllDepartment() {
 

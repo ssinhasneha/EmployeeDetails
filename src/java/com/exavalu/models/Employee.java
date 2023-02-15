@@ -4,6 +4,7 @@
  */
 package com.exavalu.models;
 
+import com.exavalu.services.APIService;
 import com.exavalu.services.DepartmentService;
 import com.exavalu.services.EmployeeService;
 import com.exavalu.services.LoginService;
@@ -18,6 +19,7 @@ import org.apache.struts2.dispatcher.ApplicationMap;
 import org.apache.struts2.dispatcher.SessionMap;
 import org.apache.struts2.interceptor.ApplicationAware;
 import org.apache.struts2.interceptor.SessionAware;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -26,18 +28,18 @@ import org.apache.struts2.interceptor.SessionAware;
 public class Employee extends ActionSupport implements ApplicationAware, SessionAware, Serializable {
 
     private String employeeId;
-    private String firstName ;
-    private String lastName ;
-    private String phone ;
-    private String address ;
-    private String gender ;
-    private String age ;
-    private String departmentId ;
-    private String roleId ;
-    
+    private String firstName;
+    private String lastName;
+    private String phone;
+    private String address;
+    private String gender;
+    private String age;
+    private String departmentId;
+    private String roleId;
+
     private String departmentName;
     private String roleName;
-    private String basicSalary ;
+    private String basicSalary;
     private String carAllowance;
 
     private SessionMap<String, Object> sessionMap = (SessionMap) ActionContext.getContext().getSession();
@@ -54,61 +56,65 @@ public class Employee extends ActionSupport implements ApplicationAware, Session
         sessionMap = (SessionMap) session;
     }
 
-     public String doAddEmployee() throws Exception {
+    public String doAddEmployee() throws Exception {
         String result = "FAILURE";
-            
-        
-          boolean success = EmployeeService.getInstance().doAddEmployee(this);
-     
-        if(success) {
+
+        boolean success = EmployeeService.getInstance().doAddEmployee(this);
+
+        if (success) {
             String successMsg = "congratulations your information Added to database";
             sessionMap.put("SuccessMsg", successMsg);
-           // String employeeId = request.getParameter("employeeId");
+            // String employeeId = request.getParameter("employeeId");
             ArrayList empList = EmployeeService.getInstance().getAllEmployees();
-           sessionMap.put("EmpList", empList);  
-             result = "SUCCESS";
+            sessionMap.put("EmpList", empList);
+            result = "SUCCESS";
         } else {
-           
-      
+
         }
 
-            return result;
-        }
-     
-      public String getSearchResult() throws Exception {
-       String result = "SUCCESS";
-       
-       
-        ArrayList empList = EmployeeService.getInstance().getSearchResult(this);
-        
-sessionMap.put("SearchEmpList", empList); 
         return result;
-      }
-      
-      public String doEditEmployee() throws Exception{
-          Employee emp=EmployeeService.getInstance().getEmployee(this.employeeId);
-          ArrayList deptList = DepartmentService.getAllDepartment();
-        
-       ArrayList roleList = RoleService.getAllRole();
-        
+    }
+
+    public String getSearchResult() throws Exception {
+        String result = "SUCCESS";
+
+        ArrayList empList = EmployeeService.getInstance().getSearchResult(this);
+
+        sessionMap.put("SearchEmpList", empList);
+        return result;
+    }
+
+    public String getAllEmployees() {
+        String result = "SHOW";
+        ArrayList empList = EmployeeService.getInstance().getAllEmployees();
+        sessionMap.put("EmpList", empList);
+        System.out.println("Emplist"+empList.size());
+        return result;
+    }
+    
+    public String doEditEmployee() throws Exception {
+        Employee emp = EmployeeService.getInstance().getEmployee(this.employeeId);
+        ArrayList deptList = DepartmentService.getAllDepartment();
+
+        ArrayList roleList = RoleService.getAllRole();
+
         sessionMap.put("Emp", emp);
-        
-         sessionMap.put("DeptList", deptList);
-         sessionMap.put("RoleList", roleList);
-         return "SUCCESS";
-      }
-      
-       public String doUpdateEmployee() throws Exception{ 
-       String result="FAILURE";
-       boolean success=EmployeeService.getInstance().updateEmployee(this,this.employeeId);
-       if(success)
-       {
-           ArrayList empList=EmployeeService.getInstance().getAllEmployees();
-           sessionMap.put("EmpList", empList);
-           result="SUCCESS";
-       }
-       return result;
-       }
+
+        sessionMap.put("DeptList", deptList);
+        sessionMap.put("RoleList", roleList);
+        return "SUCCESS";
+    }
+
+    public String doUpdateEmployee() throws Exception {
+        String result = "FAILURE";
+        boolean success = EmployeeService.getInstance().updateEmployee(this, this.employeeId);
+        if (success) {
+            ArrayList empList = EmployeeService.getInstance().getAllEmployees();
+            sessionMap.put("EmpList", empList);
+            result = "SUCCESS";
+        }
+        return result;
+    }
 
     /**
      * @return the employeeId
@@ -165,7 +171,6 @@ sessionMap.put("SearchEmpList", empList);
 //    public void setEmail(String email) {
 //        this.emailAddress = email;
 //    }
-
     /**
      * @return the password
      */
@@ -179,7 +184,6 @@ sessionMap.put("SearchEmpList", empList);
 //    public void setPassword(String password) {
 //        this.password = password;
 //    }
-
     /**
      * @return the address
      */
@@ -333,8 +337,4 @@ sessionMap.put("SearchEmpList", empList);
 //    public void setStatus(int status) {
 //        this.status = status;
 //    }
-    
-    
-    
-
 }

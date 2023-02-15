@@ -43,7 +43,7 @@
     </head>
     <body class="text-center">
 
-  <jsp:include page="menu.jsp"></jsp:include>
+ 
         <main class="form-signin">
 
             <c:set var="emp" value="${requestScope.Emp}"/>
@@ -122,7 +122,7 @@
                     <label for="floatingInput">car Allowance </label>
                 </div>
                 <div id="btm">
-                    <button class="w-100 btn btn-lg btn-primary" type="submit">Add Employee</button>
+                    <button class="w-100 btn btn-lg btn-primary" type="submit" >Add Employee</button>
                 </div>
 
                 <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
